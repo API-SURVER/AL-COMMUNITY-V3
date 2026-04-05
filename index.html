@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RIFAT-VIP-AI-Hack</title>
+    <style>
+        :root { --neon: #00ff41; --cyber: #00f2ff; --bg: rgba(5, 5, 5, 0.98); --gold: #ffd700; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #000; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        #c-panel {
+            position: fixed; top: 50px; right: 10px; width: 160px;
+            background: var(--bg); border: 2px solid var(--neon);
+            border-radius: 12px; z-index: 10000; padding: 10px;
+            box-shadow: 0 0 20px rgba(0,255,65,0.4);
+            text-align: center; touch-action: none; cursor: move;
+        }
+
+        #c-panel.minimized {
+            width: 50px !important; height: 50px !important; border-radius: 50% !important;
+            padding: 0 !important; display: flex !important; align-items: center; justify-content: center;
+        }
+        #c-panel.minimized * { display: none !important; }
+        #c-panel.minimized::after { content: "WinB"; color: var(--neon); font-size: 12px; font-weight: bold; }
+
+        .header { font-size: 10px; letter-spacing: 1px; margin-bottom: 5px; color: #fff; text-transform: uppercase; font-weight: bold; }
+        .brand-title { color: var(--gold); font-size: 12px; margin-bottom: 8px; border-bottom: 1.5px solid var(--neon); padding-bottom: 4px; font-weight: 900; }
+        .p-id { font-size: 11px; color: var(--cyber); font-weight: bold; margin-bottom: 4px; }
+        
+        .res-container { 
+            margin: 8px 0; background: rgba(255,255,255,0.1); 
+            padding: 8px; border-radius: 8px; border: 1px solid rgba(0,255,65,0.2);
+        }
+        .res-main { font-size: 24px; font-weight: 900; display: block; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .res-sub { font-size: 10px; color: #fff; margin-top: 4px; display: block; font-weight: bold; }
+        
+        .conf-label { font-size: 9px; padding: 2px 8px; border-radius: 10px; color: #000; background: var(--cyber); font-weight: bold; display: inline-block; }
+        .timer-display { font-size: 18px; margin: 8px 0; color: #fff; font-weight: bold; letter-spacing: 1px; }
+        
+        .screen { display: none; }
+        .active-screen { display: block; }
+        
+        input { width: 85%; padding: 8px; margin-bottom: 8px; background: #111; border: 1.5px solid var(--neon); color: var(--neon); text-align: center; border-radius: 6px; font-size: 12px; outline: none; font-weight: bold; }
+        
+        .btn { 
+            width: 100%; padding: 8px; margin-top: 6px; background: transparent; 
+            border: 1.5px solid var(--neon); color: var(--neon); cursor: pointer; 
+            font-size: 10px; border-radius: 6px; text-transform: uppercase; font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:active { background: var(--neon); color: #000; }
+        .btn-tg { border-color: #00ccff; color: #00ccff; }
+        
+        #history-overlay {
+            position: fixed; top: 180px; left: 10px;
+            width: 220px; max-height: 250px; background: var(--bg);
+            border: 2px solid var(--cyber); z-index: 10010; display: none;
+            padding: 10px; border-radius: 12px; overflow-y: auto;
+            touch-action: none; cursor: move; box-shadow: 0 0 20px rgba(0,242,255,0.3);
+        }
+        .hist-table { width: 100%; font-size: 10px; border-collapse: collapse; color: #fff; }
+        .hist-table th { background: rgba(0,242,255,0.2); color: var(--cyber); padding: 5px; }
+        .hist-table td { padding: 6px 2px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: bold; }
+        
+        #alert-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10005; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <iframe id="game-frame" src="https://www.hgzy32.com/#/register?invitationCode=572351853511"><"https://dkwin12.com/#/saasLottery/WinGo?gameCode=WinGo_30S&lottery=WinGo"></iframe>
+    
+    <div id="c-panel">
+        <div id="alert-box">
+            <div id="alert-txt" style="font-size: 16px; font-weight: 900;"></div>
+        </div>
+        <div id="login-screen" class="screen active-screen">
+            <div class="brand-title">AL COMMUNITY</div>
+            <div class="header">AL COMMUNITY</div>
+            <input type="password" id="pass" placeholder="ENTER PASSWORD" />
+            <button class="btn" onclick="verifyPass()">LOGIN</button>
+            <button class="btn btn-tg" onclick="window.open('https://t.me/AL_TEAM_OFFICIAL_CHANNEL', '_blank')">JOIN TELEGRAM</button>
+        </div>
+        <div id="server-screen" class="screen">
+            <div class="brand-title">AL COMMUNITY</div>
+            <div class="header">CHOOSE GAME</div>
+            <button class="btn" onclick="selectServer('1M')">WINGO 1 MINUTE</button>
+            <button class="btn" onclick="selectServer('30S')">WINGO 30 SEC</button>
+            <button class="btn btn-tg" onclick="window.open('https://t.me/rifat10xteam', '_blank')">SUPPORT</button>
+        </div>
+        <div id="engine-ui" class="screen">
+            <div class="brand-title">AL COMMUNITY</div>
+            <div class="header" id="srv-title">AI ENGINE</div>
+            <div class="p-id" id="id-txt">PERIOD: --</div>
+            <span class="conf-label" id="conf-txt">Acc: --%</span>
+            <div class="res-container">
+                <span class="res-main" id="res-bs">--</span>
+                <span class="res-sub" id="res-color-num">PLEASE WAIT...</span>
+            </div>
+            <div class="timer-display" id="time-txt">00:00</div>
+            <button class="btn" onclick="toggleHistory()">VIEW HISTORY</button>
+            <button class="btn btn-tg" onclick="window.open('https://t.me/rifat10xteam', '_blank')">TELEGRAM</button>
+            <button class="btn" onclick="toggleMinimize(event)" style="border-color:#ff4444; color:#ff4444;">HIDE MOD</button>
+        </div>
+    </div>
+
+    <div id="history-overlay">
+        <div class="header" style="color:var(--cyber); text-align: center; font-size: 12px; margin-bottom: 10px;">RECENT RESULTS</div>
+        <table class="hist-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>PRED</th>
+                    <th>NUM</th>
+                    <th>STAT</th>
+                </tr>
+            </thead>
+            <tbody id="hist-body"></tbody>
+        </table>
+        <button class="btn" onclick="toggleHistory()" style="margin-top:12px; border-color:#ff4444; color:#ff4444;">CLOSE</button>
+    </div>
+
+    <script>
+        // --- AD CONTROL LOGIC ---
+        (function() {
+            let adCount = sessionStorage.getItem('adShownCount') || 0;
+            if (parseInt(adCount) < 2) { // ২ বারের বেশি অ্যাড আসবে না এই সেশনে
+                const script = document.createElement('script');
+                script.src = "https://pl28994066.profitablecpmratenetwork.com/07/38/09/0738093339a570388ab432511b9f3530.js";
+                document.body.appendChild(script);
+                sessionStorage.setItem('adShownCount', parseInt(adCount) + 1);
+            }
+        })();
+
+        // --- GAME ENGINE LOGIC ---
+        const KEY = "AL12";
+        let activeServer = '1M', apiURL = "", isRunning = false, currentPrediction = null, lastProcessedID = "";
+        const panel = document.getElementById('c-panel');
+
+        function verifyPass() { 
+            if(document.getElementById('pass').value === KEY) showScreen('server-screen'); 
+            else alert("WRONG PASSWORD!"); 
+        }
+
+        function selectServer(type) {
+            activeServer = type;
+            const base = type === '1M' ? "https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json" : "https://draw.ar-lottery01.com/WinGo/WinGo_30S/GetHistoryIssuePage.json";
+            apiURL = base + "?pageNo=1&pageSize=1000";
+            document.getElementById('srv-title').innerText = "WINGO " + type;
+            showScreen('engine-ui'); isRunning = true; startEngine();
+        }
+
+        function showScreen(id) { 
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); 
+            document.getElementById(id).classList.add('active-screen'); 
+        }
+        
+        function toggleMinimize(e) { if(e) e.stopPropagation(); panel.classList.toggle('minimized'); }
+        panel.addEventListener('click', (e) => { if(panel.classList.contains('minimized')) toggleMinimize(e); });
+
+        function toggleHistory() { const h = document.getElementById('history-overlay'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; }
+        function getColor(num) { if (num === 0) return "RED+V"; if (num === 5) return "GREEN+V"; return [1,3,7,9].includes(num) ? "GREEN" : "RED"; }
+
+        async function analyzeLogic() {
+            try {
+                const res = await fetch(apiURL);
+                const json = await res.json();
+                const list = json.data.list; 
+                const targetID = (BigInt(list[0].issueNumber) + 1n).toString();
+                if (currentPrediction && currentPrediction.id === targetID) return;
+                
+                const latestNum = parseInt(list[0].number);
+                let followers = [];
+                for (let i = 1; i < list.length; i++) { if (parseInt(list[i].number) === latestNum) followers.push(parseInt(list[i-1].number)); }
+                
+                if (followers.length > 0) {
+                    let stats = { B: 0, S: 0, ns: {} };
+                    followers.forEach(v => { if(v >= 5) stats.B++; else stats.S++; stats.ns[v] = (stats.ns[v] || 0) + 1; });
+                    const bestN = Object.keys(stats.ns).reduce((a, b) => stats.ns[a] > stats.ns[b] ? a : b);
+                    const pBS = stats.B >= stats.S ? "BIG" : "SMALL";
+                    let conf = Math.round(((pBS === "BIG" ? stats.B : stats.S) / followers.length) * 100);
+                    if(conf > 97) conf = 96; if(conf < 70) conf = 72;
+                    currentPrediction = { id: targetID, bs: pBS, color: getColor(parseInt(bestN)), num: bestN, conf: conf };
+                    updateUI();
+                }
+            } catch (e) {}
+        }
+
+        function updateUI() {
+            if(!currentPrediction) return;
+            document.getElementById('id-txt').innerText = "PERIOD: " + currentPrediction.id.slice(-4);
+            document.getElementById('conf-txt').innerText = `ACCURACY: ${currentPrediction.conf}%`;
+            const rEl = document.getElementById('res-bs'); rEl.innerText = currentPrediction.bs;
+            rEl.style.color = currentPrediction.bs === "BIG" ? "#00f2ff" : "#ff4444";
+            document.getElementById('res-color-num').innerText = `${currentPrediction.color} | NUMBER: ${currentPrediction.num}`;
+        }
+
+        async function checkWin() {
+            try {
+                const res = await fetch(apiURL);
+                const json = await res.json();
+                const top = json.data.list[0];
+                
+                if (top.issueNumber !== lastProcessedID && currentPrediction && BigInt(top.issueNumber) >= BigInt(currentPrediction.id)) {
+                    const actNum = parseInt(top.number), actBS = actNum >= 5 ? "BIG" : "SMALL";
+                    const isWin = (currentPrediction.bs === actBS || currentPrediction.num == actNum);
+                    const body = document.getElementById('hist-body');
+                    
+                    const newRow = `<tr><td>${top.issueNumber.slice(-4)}</td><td>${currentPrediction.bs}</td><td>${actNum}</td><td style="color:${isWin?'#00ff41':'#ff4444'}">${isWin?'WIN':'LOSS'}</td></tr>`;
+                    body.insertAdjacentHTML('afterbegin', newRow);
+
+                    const ab = document.getElementById('alert-box'); const at = document.getElementById('alert-txt');
+                    ab.style.display = 'flex'; at.innerHTML = isWin ? `<b style="color:#00ff41">WINNER!</b>` : `<b style="color:#ff4444">LOSS</b>`;
+                    setTimeout(() => { ab.style.display = 'none'; }, 2000);
+                    
+                    lastProcessedID = top.issueNumber;
+                }
+            } catch(e){}
+        }
+
+        function startEngine() { setInterval(async () => { if(!isRunning) return; const now = new Date(); const sec = now.getSeconds(); const rem = activeServer === '1M' ? (60 - sec) : (30 - (sec % 30)); document.getElementById('time-txt').innerText = `TIME: ${rem < 10 ? '0'+rem : rem}s`; await checkWin(); await analyzeLogic(); }, 1000); }
+
+        function setupDrag(el) {
+            let offset = [0,0], isDown = false;
+            const start = (e) => {
+                isDown = true;
+                let cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                let cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+                offset = [el.offsetLeft - cx, el.offsetTop - cy];
+            };
+            const move = (e) => {
+                if(!isDown) return;
+                let cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                let cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+                el.style.left = (cx + offset[0]) + 'px';
+                el.style.top = (cy + offset[1]) + 'px';
+            };
+            el.addEventListener('mousedown', start);
+            el.addEventListener('touchstart', start, {passive: false});
+            document.addEventListener('mouseup', () => isDown = false);
+            document.addEventListener('touchend', () => isDown = false);
+            document.addEventListener('mousemove', move);
+            document.addEventListener('touchmove', (e) => { if(isDown) { e.preventDefault(); move(e); } }, {passive: false});
+        }
+
+        setupDrag(panel);
+        setupDrag(document.getElementById('history-overlay'));
+    </script>
+</body>
+</html>
